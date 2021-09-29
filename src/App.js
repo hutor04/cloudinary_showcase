@@ -25,19 +25,25 @@ function App() {
 
   const pattern = /https:\/\/res\.cloudinary\.com\/(.*)\/.*\/.*\/.*\/(.*)/
   let match = pattern.exec(inputImage)
-  let accountName = match[1]
-  let imageId = match[2]
 
-  let cld = new Cloudinary({
-    cloud: {
-      cloudName: accountName
-    }
-  });
+  let accountName = null
+  let imageId = null
+  let cld = null
+  let myImage = null
 
-  let myImage = cld.image(imageId)
-  myImage.resize(thumbnail().width(imageSettings.width).height(imageSettings.height).gravity(imageSettings.gravity).zoom(imageSettings.zoom))
-    .roundCorners(byRadius(imageSettings.radius))
+  if (match) {
+    accountName = match[1]
+    imageId = match[2]
 
+    cld = new Cloudinary({
+      cloud: {
+        cloudName: accountName
+      }
+    })
+    myImage = cld.image(imageId)
+    myImage.resize(thumbnail().width(imageSettings.width).height(imageSettings.height).gravity(imageSettings.gravity).zoom(imageSettings.zoom))
+      .roundCorners(byRadius(imageSettings.radius))
+  }
 
   const onImageUrlChange = (val) => {
     setInputImage(val)
@@ -48,6 +54,9 @@ function App() {
       ...val
     })
   }
+
+  const processedImage = (match) ? <AdvancedImage cldImg={myImage}/> :
+    <img src={'/placeholder.png'} style={{ width: 400, height: 300 }}/>
 
   return (
     <Container maxWidth={'xl'}>
@@ -80,10 +89,10 @@ function App() {
           </Box>
           <Grid
             container
-            sx={{ width: 915, height: 800, direction: 'row', alignItems: 'center', justifyContent: 'center' }}
+            sx={{width: 915, height: 800, direction: 'row', alignItems: 'center', justifyContent: 'center'}}
           >
             <Grid item>
-              <AdvancedImage cldImg={myImage}/>
+              {processedImage}
             </Grid>
           </Grid>
           <Box
@@ -98,7 +107,7 @@ function App() {
               id="outlined-basic"
               label={'URL out'}
               variant="outlined"
-              value={myImage.toURL()}
+              value={(myImage) ? myImage.toURL() : ''}
             />
           </Box>
         </Grid>
