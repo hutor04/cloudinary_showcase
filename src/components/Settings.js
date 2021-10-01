@@ -13,6 +13,7 @@ import {FormControl, InputLabel, Select, MenuItem} from '@mui/material'
 const Settings = (props) => {
   const { action } = props
   const gravityTypes = ['center', 'auto', 'north', 'west', 'south', 'east', 'face', 'faces']
+  const effects = ['none', 'sepia', 'grayscale']
   const radiusTypes = [0, 25, 50, 100, 'max']
   const zoomMarks = [
     {
@@ -51,6 +52,7 @@ const Settings = (props) => {
   const [gravity, setGravity] = useState(gravityTypes[0])
   const [zoom, setZoom] = useState(1)
   const [radius, setRadius] = useState(radiusTypes[0])
+  const [effect, setEffect] = useState('none')
 
   const onWidthChange = (val) => {
     let newVal = parseInt(val)
@@ -81,12 +83,17 @@ const Settings = (props) => {
     setRadius(newVal)
   }
 
+  const onEffectChange = (val) => {
+    setEffect(val)
+  }
+
   const onConfirm = () => {
     let settings = {
       ...dimensions,
       zoom: zoom,
       gravity: gravity,
-      radius: radius
+      radius: radius,
+      effect: effect,
     }
     action(settings)
   }
@@ -176,6 +183,19 @@ const Settings = (props) => {
             onChange={(event) => onRadiusChange(event.target.value)}
           >
             {radiusTypes.map((x) => <MenuItem key={x} value={x}>{x}</MenuItem>)}
+          </Select>
+        </FormControl>
+        <Divider sx={{ mt: 4, mb:2 }}>Effects</Divider>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Effects</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={effect}
+            label="Effects"
+            onChange={(event) => onEffectChange(event.target.value)}
+          >
+            {effects.map((x) => <MenuItem key={x} value={x}>{x[0].toUpperCase() + x.slice(1).toLowerCase()}</MenuItem>)}
           </Select>
         </FormControl>
         <Stack spacing={2} direction="row">

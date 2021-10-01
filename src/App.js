@@ -4,10 +4,10 @@ import Grid from '@mui/material/Grid'
 import Container from '@mui/material/Container'
 import TextField from '@mui/material/TextField'
 import Settings from './components/Settings'
-import {Cloudinary} from '@cloudinary/url-gen'
-import {AdvancedImage} from '@cloudinary/react'
-import {fill, scale, thumbnail} from '@cloudinary/url-gen/actions/resize'
-import {byRadius} from '@cloudinary/url-gen/actions/roundCorners'
+import { Cloudinary, Actions } from '@cloudinary/url-gen'
+import { AdvancedImage } from '@cloudinary/react'
+import { fill, scale, thumbnail } from '@cloudinary/url-gen/actions/resize'
+import { byRadius } from '@cloudinary/url-gen/actions/roundCorners'
 import Typography from "@mui/material/Typography";
 import {Divider} from "@mui/material";
 
@@ -19,7 +19,8 @@ function App() {
     height: 200,
     radius: 0,
     gravity: 'center',
-    zoom: 1
+    zoom: 1,
+    effect: 'none'
   })
   const [inputImage, setInputImage] = useState('https://res.cloudinary.com/dipmnmohl/image/upload/v1619610667/woman_zaij6u.jpg')
 
@@ -41,8 +42,15 @@ function App() {
       }
     })
     myImage = cld.image(imageId)
-    myImage.resize(thumbnail().width(imageSettings.width).height(imageSettings.height).gravity(imageSettings.gravity).zoom(imageSettings.zoom))
+    myImage
+      .resize(thumbnail().width(imageSettings.width).height(imageSettings.height).gravity(imageSettings.gravity).zoom(imageSettings.zoom))
       .roundCorners(byRadius(imageSettings.radius))
+
+    if (imageSettings.effect === 'sepia') {
+      myImage.adjust(Actions.Effect.sepia())
+    } else if (imageSettings.effect === 'grayscale') {
+      myImage.adjust(Actions.Effect.grayscale())
+    }
   }
 
   const onImageUrlChange = (val) => {
