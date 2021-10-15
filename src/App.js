@@ -126,3 +126,6 @@ function App() {
 }
 
 export default App
+
+// TODO
+// Tabs, Additional use cases, split output URL to 3 components.
