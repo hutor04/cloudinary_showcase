@@ -94,6 +94,11 @@ const Settings = (props) => {
       gravity: gravity,
       radius: radius,
       effect: effect,
+      blurFace: 'none',
+      vignette: false,
+      cartoonify: false,
+      text: 'none',
+      watermark: 'none',
     }
     action(settings)
   }
@@ -109,9 +114,6 @@ const Settings = (props) => {
   return(
     <Container maxWidth="sm">
       <Box sx={{ my: 4 }}>
-        <Typography component="h2" variant={'h4'} gutterBottom>
-          Settings
-        </Typography>
         <Divider sx={{mb: 2}}>Dimensions</Divider>
         <Box
           component="form"
@@ -171,6 +173,7 @@ const Settings = (props) => {
             value={zoom}
             onChange={(event) => setZoom(event.target.value)}
           />
+          <p>Funker bare med gravity face og auto.</p>
         </Box>
         <Divider sx={{ mt: 4, mb:2 }}>Radius</Divider>
         <FormControl fullWidth>
