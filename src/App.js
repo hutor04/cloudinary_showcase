@@ -14,17 +14,18 @@ import TextField from '@mui/material/TextField'
 import Settings from './components/Settings'
 import {Cloudinary, Actions} from '@cloudinary/url-gen'
 import {AdvancedImage} from '@cloudinary/react'
-import {fill, scale, thumbnail} from '@cloudinary/url-gen/actions/resize'
+import {thumbnail} from '@cloudinary/url-gen/actions/resize'
 import {byRadius} from '@cloudinary/url-gen/actions/roundCorners'
 import Typography from "@mui/material/Typography";
-import {Divider} from "@mui/material";
+import {Divider, InputLabel, MenuItem, Select} from "@mui/material";
 import Stack from '@mui/material/Stack'
 
 function App() {
   const presets = {
     '1': {
-      width: 400,
-      height: 400,
+      aspectRatio: 'none',
+      width: 800,
+      height: 800,
       radius: 0,
       gravity: 'center',
       zoom: 1,
@@ -36,8 +37,9 @@ function App() {
       watermark: 'none',
     },
     '2': {
-      width: 400,
-      height: 400,
+      aspectRatio: 'none',
+      width: 800,
+      height: 800,
       radius: 'max',
       gravity: 'none',
       zoom: 1,
@@ -49,8 +51,9 @@ function App() {
       watermark: 'none',
     },
     '3': {
-      width: 400,
-      height: 400,
+      aspectRatio: 'none',
+      width: 800,
+      height: 800,
       radius: 'max',
       gravity: 'none',
       zoom: 1,
@@ -62,21 +65,23 @@ function App() {
       watermark: 'none',
     },
     '4': {
-      width: 400,
-      height: 400,
+      aspectRatio: 'none',
+      width: 800,
+      height: 800,
       radius: 0,
       gravity: 'center',
       zoom: 1,
       effect: 'none',
-      blurFace: 'e_blur_faces',
+      blurFace: 'e_blur_faces:1000',
       vignette: false,
       cartoonify: false,
       text: 'none',
       watermark: 'none',
     },
     '5': {
-      width: 400,
-      height: 400,
+      aspectRatio: 'none',
+      width: 800,
+      height: 800,
       radius: 0,
       gravity: 'center',
       zoom: 1,
@@ -88,8 +93,9 @@ function App() {
       watermark: 'none',
     },
     '6': {
-      width: 400,
-      height: 400,
+      aspectRatio: 'none',
+      width: 800,
+      height: 800,
       radius: 0,
       gravity: 'center',
       zoom: 1,
@@ -101,8 +107,9 @@ function App() {
       watermark: 'none',
     },
     '7': {
-      width: 400,
-      height: 400,
+      aspectRatio: 'none',
+      width: 800,
+      height: 800,
       radius: 0,
       gravity: 'center',
       zoom: 1,
@@ -114,8 +121,9 @@ function App() {
       watermark: 'none',
     },
     '8': {
-      width: 400,
-      height: 400,
+      aspectRatio: 'none',
+      width: 800,
+      height: 800,
       radius: 0,
       gravity: 'center',
       zoom: 1,
@@ -127,9 +135,11 @@ function App() {
       watermark: 'l_guru_dpzplt,o_30,g_south,x_20,y_20',
     }
   }
+  const aspectRatios = ['none', '1:1', '5:4', '3:1', '3:2', '4:3', '16:9']
   const [imageSettings, setImageSettings] = useState({
-    width: 400,
-    height: 400,
+    aspectRatio: '1:1',
+    width: 800,
+    height: 800,
     radius: 0,
     gravity: 'none',
     zoom: 1,
@@ -158,7 +168,7 @@ function App() {
     })
   }
 
-  const pattern = /https:\/\/res\.cloudinary\.com\/(.*)\/.*\/.*\/.*\/(.*)/
+  const pattern = /https:\/\/res\.cloudinary\.com\/(.*?)\/image\/upload\/.*\/(.*)/
   let match = pattern.exec(inputImage)
 
   let accountName = null
@@ -186,6 +196,10 @@ function App() {
       }
     myImage.roundCorners(byRadius(imageSettings.radius))
 
+    if (imageSettings.aspectRatio !== 'none') {
+      myImage.resize(thumbnail().aspectRatio(imageSettings.aspectRatio))
+    }
+
     if (imageSettings.effect === 'sepia') {
       myImage.adjust(Actions.Effect.sepia())
     } else if (imageSettings.effect === 'grayscale') {
@@ -193,7 +207,7 @@ function App() {
     }
 
     if (imageSettings.blurFace !== 'none') {
-      myImage.addTransformation('e_blur_faces')
+      myImage.addTransformation(imageSettings.blurFace)
     }
     if (imageSettings.vignette) {
       myImage.adjust(Actions.Effect.vignette())
@@ -232,9 +246,18 @@ function App() {
     })
   }
 
+  const handleAspectRatioChange = (val) => {
+    setImageSettings((prevState) => {
+      return ({
+        ...prevState,
+        aspectRatio: val
+      })
+    })
+  }
 
 
-  const processedImage = (match) ? <AdvancedImage cldImg={myImage}/> :
+
+  const processedImage = (match) ? <AdvancedImage cldImg={myImage} style={{maxWidth: 1400}}/> :
     <img src={'/placeholder.png'} style={{width: 400, height: 300}}/>
 
   return (
@@ -275,13 +298,30 @@ function App() {
                                         label="Tekst"/>
                     </RadioGroup>
                   </FormControl>
+                  <Divider sx={{ mt: 4, mb:2 }}>Aspect Ratio</Divider>
+                  <FormControl fullWidth>
+                    <InputLabel id="aspect-ratio">Ratio</InputLabel>
+                    <Select
+                      labelId="aspect-ratio"
+                      id="demo-simple-select"
+                      value={imageSettings.aspectRatio}
+                      label="Gravity"
+                      onChange={(event) => handleAspectRatioChange( event.target.value)}
+                    >
+                      {
+                        aspectRatios.map((x) => {
+                          return <MenuItem key={x} value={x}>{x[0].toUpperCase() + x.slice(1).toLowerCase()}</MenuItem>
+                        })
+                      }
+                    </Select>
+                  </FormControl>
                 </Box>
               </TabPanel>
             </TabContext>
           </Box>
         </Grid>
 
-        <Grid item  xs={6} md={7.4}>
+        <Grid item  xs={6} md={8}>
           <Box sx={{mt: 4}}>
             <Typography component="h2" variant={'h4'} gutterBottom>
               Image
@@ -302,11 +342,12 @@ function App() {
               variant="outlined"
               value={inputImage}
               onChange={(event) => onImageUrlChange(event.target.value)}
+              onSubmit={e => { e.preventDefault() }}
             />
           </Box>
           <Grid
             container
-            sx={{width: 1400, height: 800, direction: 'row', alignItems: 'center', justifyContent: 'center'}}
+            sx={{minWidth: 1400, minHeight: 800, direction: 'row', alignItems: 'center', justifyContent: 'center'}}
           >
             <Grid item>
               {processedImage}
@@ -324,7 +365,7 @@ function App() {
               id="outlined-basic"
               label={'URL out'}
               variant="outlined"
-              value={(myImage) ? myImage.toURL() : ''}
+              value={(myImage) ? myImage.toURL().substring(0, myImage.toURL().indexOf('?')) : ''}
             />
           </Box>
             <Stack spacing={2} direction="row">
@@ -338,7 +379,7 @@ function App() {
               >
             <TextField
               id="outlined-basic"
-              label={'Cloudinary Account Name'}
+              label={'Fixed Cloudinary URL'}
               variant="outlined"
               value={(accountName) ? `https://res.cloudinary.com/${accountName}/image/upload` : ''}
             />
@@ -353,7 +394,7 @@ function App() {
               >
             <TextField
               id="outlined-basic"
-              label={'Transformations'}
+              label={'Configurations'}
               variant="outlined"
               value={(transformations) ? transformations : ''}
             />

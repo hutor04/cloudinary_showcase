@@ -90,6 +90,7 @@ const Settings = (props) => {
   const onConfirm = () => {
     let settings = {
       ...dimensions,
+      aspectRatio: 'none',
       zoom: zoom,
       gravity: gravity,
       radius: radius,
@@ -129,14 +130,12 @@ const Settings = (props) => {
           <TextField
             id="outlined-number"
             label="Width"
-            defaultValue="Default Value"
             value={dimensions.width}
             onChange={(event) => onWidthChange(event.target.value)}
           />
           <TextField
             id="outlined-number"
             label="Height"
-            defaultValue="Default Value"
             value={dimensions.height}
             onChange={(event) => onHeightChange(event.target.value)}
           />
@@ -173,7 +172,7 @@ const Settings = (props) => {
             value={zoom}
             onChange={(event) => setZoom(event.target.value)}
           />
-          <p>Funker bare med Gravity face og auto.</p>
+          <p>Only works with some of the gravity selections.</p>
         </Box>
         <Divider sx={{ mt: 4, mb:2 }}>Radius</Divider>
         <FormControl fullWidth>
