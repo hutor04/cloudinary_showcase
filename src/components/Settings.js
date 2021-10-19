@@ -12,7 +12,7 @@ import {FormControl, InputLabel, Select, MenuItem} from '@mui/material'
 
 const Settings = (props) => {
   const { action } = props
-  const gravityTypes = ['center', 'auto', 'north', 'west', 'south', 'east', 'face', 'faces']
+  const gravityTypes = ['none', 'center', 'auto', 'north', 'west', 'south', 'east', 'face', 'faces']
   const effects = ['none', 'sepia', 'grayscale']
   const radiusTypes = [0, 25, 50, 100, 'max']
   const zoomMarks = [

@@ -39,7 +39,7 @@ function App() {
       width: 400,
       height: 400,
       radius: 'max',
-      gravity: 'face',
+      gravity: 'none',
       zoom: 1,
       effect: 'grayscale',
       blurFace: 'none',
@@ -52,7 +52,7 @@ function App() {
       width: 400,
       height: 400,
       radius: 'max',
-      gravity: 'face',
+      gravity: 'none',
       zoom: 1,
       effect: 'none',
       blurFace: 'none',
@@ -131,7 +131,7 @@ function App() {
     width: 400,
     height: 400,
     radius: 0,
-    gravity: 'center',
+    gravity: 'none',
     zoom: 1,
     effect: 'none',
     blurFace: 'none',
@@ -179,9 +179,12 @@ function App() {
       }
     })
     myImage = cld.image(imageId)
-    myImage
-      .resize(thumbnail().width(imageSettings.width).height(imageSettings.height).gravity(imageSettings.gravity).zoom(imageSettings.zoom))
-      .roundCorners(byRadius(imageSettings.radius))
+      if (imageSettings.gravity !== 'none') {
+        myImage.resize(thumbnail().width(imageSettings.width).height(imageSettings.height).gravity(imageSettings.gravity).zoom(imageSettings.zoom))
+      } else {
+        myImage.resize(thumbnail().width(imageSettings.width).height(imageSettings.height).zoom(imageSettings.zoom))
+      }
+    myImage.roundCorners(byRadius(imageSettings.radius))
 
     if (imageSettings.effect === 'sepia') {
       myImage.adjust(Actions.Effect.sepia())
