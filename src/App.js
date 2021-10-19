@@ -270,8 +270,6 @@ function App() {
                                         label="Cartoonify"/>
                       <FormControlLabel value="7" control={<Radio/>} onClick={handlePresetSelection}
                                         label="Tekst"/>
-                      <FormControlLabel value="8" control={<Radio/>} onClick={handlePresetSelection}
-                                        label="Vannmerke"/>
                     </RadioGroup>
                   </FormControl>
                 </Box>
@@ -280,7 +278,7 @@ function App() {
           </Box>
         </Grid>
 
-        <Grid item>
+        <Grid item  xs={6} md={7.4}>
           <Box sx={{mt: 4}}>
             <Typography component="h2" variant={'h4'} gutterBottom>
               Image
@@ -290,7 +288,7 @@ function App() {
           <Box
             component="form"
             sx={{
-              '& > :not(style)': {m: 1, width: '100ch'},
+              '& > :not(style)': {m: 1, width: '150ch'},
             }}
             noValidate
             autoComplete="off"
@@ -305,7 +303,7 @@ function App() {
           </Box>
           <Grid
             container
-            sx={{width: 915, height: 800, direction: 'row', alignItems: 'center', justifyContent: 'center'}}
+            sx={{width: 1400, height: 800, direction: 'row', alignItems: 'center', justifyContent: 'center'}}
           >
             <Grid item>
               {processedImage}
@@ -314,7 +312,7 @@ function App() {
           <Box
             component="form"
             sx={{
-              '& > :not(style)': {m: 1, width: '100ch'},
+              '& > :not(style)': {m: 1, width: '150ch'},
             }}
             noValidate
             autoComplete="off"
@@ -330,7 +328,7 @@ function App() {
               <Box
                 component="form"
                 sx={{
-                  '& > :not(style)': {m: 1, width: '25ch'},
+                  '& > :not(style)': {m: 1, width: '48ch'},
                 }}
                 noValidate
                 autoComplete="off"
@@ -339,13 +337,13 @@ function App() {
               id="outlined-basic"
               label={'Cloudinary Account Name'}
               variant="outlined"
-              value={(accountName) ? accountName : ''}
+              value={(accountName) ? `https://res.cloudinary.com/${accountName}/image/upload` : ''}
             />
               </Box>
               <Box
                 component="form"
                 sx={{
-                  '& > :not(style)': {m: 1, width: '43ch'},
+                  '& > :not(style)': {m: 1, width: '47ch'},
                 }}
                 noValidate
                 autoComplete="off"
@@ -360,14 +358,14 @@ function App() {
               <Box
                 component="form"
                 sx={{
-                  '& > :not(style)': {m: 1, width: '25ch'},
+                  '& > :not(style)': {m: 1, width: '48ch'},
                 }}
                 noValidate
                 autoComplete="off"
               >
             <TextField
               id="outlined-basic"
-              label={'URL out'}
+              label={'Image ID'}
               variant="outlined"
               value={(imageId) ? imageId : ''}
             />

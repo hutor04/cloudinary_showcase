@@ -173,7 +173,7 @@ const Settings = (props) => {
             value={zoom}
             onChange={(event) => setZoom(event.target.value)}
           />
-          <p>Funker bare med gravity face og auto.</p>
+          <p>Funker bare med Gravity face og auto.</p>
         </Box>
         <Divider sx={{ mt: 4, mb:2 }}>Radius</Divider>
         <FormControl fullWidth>
