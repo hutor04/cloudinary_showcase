@@ -1,56 +1,26 @@
 import React, { useState } from 'react'
 import Container from '@mui/material/Container'
-import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import TextField from '@mui/material/TextField'
-import Slider from '@mui/material/Slider'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import {FormControl, InputLabel, Select, MenuItem} from '@mui/material'
 
 
 const Settings = (props) => {
-  const { action } = props
+  const { action, data } = props
   const gravityTypes = ['none', 'center', 'auto', 'north', 'west', 'south', 'east', 'face', 'faces']
   const effects = ['none', 'sepia', 'grayscale']
-  const radiusTypes = [0, 25, 50, 100, 'max']
-  const zoomMarks = [
-    {
-      value: 0.2,
-      label: '0.2',
-    },
-    {
-      value: 0.5,
-      label: '0.5',
-    },
-    {
-      value: 0.8,
-      label: '0.8',
-    },
-    {
-      value: 1,
-      label: '1',
-    },
-    {
-      value: 1.2,
-      label: '1.2',
-    },
-    {
-      value: 1.5,
-      label: '1.5',
-    },
-    {
-      value: 2,
-      label: '2',
-    },
-  ];
+  const radiusTypes = ['None', 0, 25, 50, 100, 'max']
+  const zoomMarks = ['None', 0.2, 0.5, 0.8, 1, 1.2, 1.5, 2]
+
   const [dimensions, setDimensions] = useState({
-    width: 200,
-    height: 200,
+    width: 'None',
+    height: 'None',
   })
   const [gravity, setGravity] = useState(gravityTypes[0])
-  const [zoom, setZoom] = useState(1)
+  const [zoom, setZoom] = useState(zoomMarks[0])
   const [radius, setRadius] = useState(radiusTypes[0])
   const [effect, setEffect] = useState('none')
 
@@ -104,14 +74,6 @@ const Settings = (props) => {
     action(settings)
   }
 
-  const valuetext = (val) => {
-    return `${val}`;
-  }
-
-  const valueLabelFormat = (val) => {
-    return zoomMarks.findIndex((x) => x.value === val) + 1;
-  }
-
   return(
     <Container maxWidth="sm">
       <Box sx={{ my: 4 }}>
@@ -158,22 +120,23 @@ const Settings = (props) => {
           </Select>
         </FormControl>
         <Divider sx={{ mt: 4, mb: 4}}>Zoom</Divider>
-        <Box>
-          <Slider
-            aria-label="Restricted values"
-            defaultValue={1}
-            min={0.2}
-            max={2}
-            valueLabelFormat={valueLabelFormat}
-            getAriaValueText={valuetext}
-            step={null}
-            valueLabelDisplay="auto"
-            marks={zoomMarks}
+        <FormControl fullWidth>
+          <InputLabel id="zoom-select-label">Zoom</InputLabel>
+          <Select
+            labelId="zoom-select-label"
+            id="zoom-select"
             value={zoom}
+            label="Zoom"
             onChange={(event) => setZoom(event.target.value)}
-          />
-          <p>Only works with some of the gravity selections.</p>
-        </Box>
+          >
+            {
+              zoomMarks.map((x) => {
+                return <MenuItem key={x} value={x}>{x}</MenuItem>
+              })
+            }
+          </Select>
+          <p>Fungerer kun i kombinasjon med noen av valgene under "Gravity".</p>
+        </FormControl>
         <Divider sx={{ mt: 4, mb:2 }}>Radius</Divider>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Radius</InputLabel>
@@ -201,7 +164,7 @@ const Settings = (props) => {
           </Select>
         </FormControl>
         <Stack spacing={2} direction="row">
-          <Button sx={{ mt: 4}} variant="contained" onClick={onConfirm}>Confirm</Button>
+          <Button sx={{ mt: 4}} variant="contained" onClick={onConfirm}>Oppdater bilde</Button>
         </Stack>
       </Box>
     </Container>

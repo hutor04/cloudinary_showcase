@@ -19,130 +19,17 @@ import {byRadius} from '@cloudinary/url-gen/actions/roundCorners'
 import Typography from "@mui/material/Typography";
 import {Divider, InputLabel, MenuItem, Select} from "@mui/material";
 import Stack from '@mui/material/Stack'
+import { presets } from './configs/image-presets'
 
 function App() {
-  const presets = {
-    '1': {
-      aspectRatio: 'none',
-      width: 800,
-      height: 800,
-      radius: 0,
-      gravity: 'center',
-      zoom: 1,
-      effect: 'none',
-      blurFace: 'none',
-      vignette: false,
-      cartoonify: false,
-      text: 'none',
-      watermark: 'none',
-    },
-    '2': {
-      aspectRatio: 'none',
-      width: 800,
-      height: 800,
-      radius: 'max',
-      gravity: 'none',
-      zoom: 1,
-      effect: 'grayscale',
-      blurFace: 'none',
-      vignette: false,
-      cartoonify: false,
-      text: 'none',
-      watermark: 'none',
-    },
-    '3': {
-      aspectRatio: 'none',
-      width: 800,
-      height: 800,
-      radius: 'max',
-      gravity: 'none',
-      zoom: 1,
-      effect: 'none',
-      blurFace: 'none',
-      vignette: false,
-      cartoonify: false,
-      text: 'none',
-      watermark: 'none',
-    },
-    '4': {
-      aspectRatio: 'none',
-      width: 800,
-      height: 800,
-      radius: 0,
-      gravity: 'center',
-      zoom: 1,
-      effect: 'none',
-      blurFace: 'e_blur_faces:1000',
-      vignette: false,
-      cartoonify: false,
-      text: 'none',
-      watermark: 'none',
-    },
-    '5': {
-      aspectRatio: 'none',
-      width: 800,
-      height: 800,
-      radius: 0,
-      gravity: 'center',
-      zoom: 1,
-      effect: 'none',
-      blurFace: 'none',
-      vignette: true,
-      cartoonify: false,
-      text: 'none',
-      watermark: 'none',
-    },
-    '6': {
-      aspectRatio: 'none',
-      width: 800,
-      height: 800,
-      radius: 0,
-      gravity: 'center',
-      zoom: 1,
-      effect: 'none',
-      blurFace: 'none',
-      vignette: false,
-      cartoonify: true,
-      text: 'none',
-      watermark: 'none',
-    },
-    '7': {
-      aspectRatio: 'none',
-      width: 800,
-      height: 800,
-      radius: 0,
-      gravity: 'center',
-      zoom: 1,
-      effect: 'none',
-      blurFace: 'none',
-      vignette: false,
-      cartoonify: false,
-      text: 'l_text:Arial_45_bold:Hello World,g_south,co_orange,x_20,y_20',
-      watermark: 'none',
-    },
-    '8': {
-      aspectRatio: 'none',
-      width: 800,
-      height: 800,
-      radius: 0,
-      gravity: 'center',
-      zoom: 1,
-      effect: 'none',
-      blurFace: 'none',
-      vignette: false,
-      cartoonify: false,
-      text: 'none',
-      watermark: 'l_guru_dpzplt,o_30,g_south,x_20,y_20',
-    }
-  }
   const aspectRatios = ['none', '1:1', '5:4', '3:1', '3:2', '4:3', '16:9']
   const [imageSettings, setImageSettings] = useState({
-    aspectRatio: '1:1',
-    width: 800,
-    height: 800,
-    radius: 0,
+    aspectRatio: 'none',
+    width: 'None',
+    height: 'None',
+    radius: 'None',
     gravity: 'none',
-    zoom: 1,
+    zoom: 'None',
     effect: 'none',
     blurFace: 'none',
     vignette: false,
@@ -168,9 +55,8 @@ function App() {
     })
   }
 
-  const pattern = /https:\/\/res\.cloudinary\.com\/(.*?)\/image\/upload\/.*\/(.*)/
+  const pattern = /https:\/\/res\.cloudinary\.com\/(.*?)\/image\/upload(?:\/.*\/|\/)(.*)/
   let match = pattern.exec(inputImage)
-
   let accountName = null
   let imageId = null
   let cld = null
@@ -189,12 +75,27 @@ function App() {
       }
     })
     myImage = cld.image(imageId)
-      if (imageSettings.gravity !== 'none') {
-        myImage.resize(thumbnail().width(imageSettings.width).height(imageSettings.height).gravity(imageSettings.gravity).zoom(imageSettings.zoom))
-      } else {
-        myImage.resize(thumbnail().width(imageSettings.width).height(imageSettings.height).zoom(imageSettings.zoom))
-      }
-    myImage.roundCorners(byRadius(imageSettings.radius))
+
+    let resize_transform = 'c_thumb,'
+    if (imageSettings.height !== 'None') {
+      resize_transform += `h_${imageSettings.height},`
+    }
+    if (imageSettings.width !== 'None') {
+      resize_transform += `w_${imageSettings.width},`
+    }
+    if (imageSettings.gravity !== 'none') {
+      resize_transform += `g_${imageSettings.gravity},`
+    }
+    if (imageSettings.zoom !== 'None') {
+      resize_transform += `z_${imageSettings.zoom},`
+    }
+    if (resize_transform !== 'c_thumb,') {
+      myImage.addTransformation(resize_transform.slice(0, -1))
+    }
+
+    if (imageSettings.radius !== 'None') {
+      myImage.roundCorners(byRadius(imageSettings.radius))
+    }
 
     if (imageSettings.aspectRatio !== 'none') {
       myImage.resize(thumbnail().aspectRatio(imageSettings.aspectRatio))
@@ -273,7 +174,10 @@ function App() {
                 </TabList>
               </Box>
               <TabPanel value="1">
-                <Settings action={handleSettingsChange}/>
+                <Settings
+                  data={imageSettings}
+                  action={handleSettingsChange}
+                />
               </TabPanel>
               <TabPanel value="2">
                 <Box minWidth={'529px'}>
@@ -296,6 +200,8 @@ function App() {
                                         label="Cartoonify"/>
                       <FormControlLabel value="7" control={<Radio/>} onClick={handlePresetSelection}
                                         label="Tekst"/>
+                      <FormControlLabel value="8" control={<Radio/>} onClick={handlePresetSelection}
+                                        label="To runde hjørner"/>
                     </RadioGroup>
                   </FormControl>
                   <Divider sx={{ mt: 4, mb:2 }}>Aspect Ratio</Divider>
@@ -336,14 +242,21 @@ function App() {
             noValidate
             autoComplete="off"
           >
+            <FormControl fullWidth>
             <TextField
               id="outlined-basic"
-              label={'URL in'}
+              label={'URL inn'}
               variant="outlined"
               value={inputImage}
-              onChange={(event) => onImageUrlChange(event.target.value)}
-              onSubmit={e => { e.preventDefault() }}
+              onChange={(event) => {
+                event.preventDefault()
+                onImageUrlChange(event.target.value)
+              }}
+              onSubmit={(event) => {
+                event.preventDefault()
+              }}
             />
+            </FormControl>
           </Box>
           <Grid
             container
@@ -363,7 +276,7 @@ function App() {
           >
             <TextField
               id="outlined-basic"
-              label={'URL out'}
+              label={'URL ut'}
               variant="outlined"
               value={(myImage) ? myImage.toURL().substring(0, myImage.toURL().indexOf('?')) : ''}
             />
@@ -379,7 +292,7 @@ function App() {
               >
             <TextField
               id="outlined-basic"
-              label={'Fixed Cloudinary URL'}
+              label={'Fast Cloudinary URL'}
               variant="outlined"
               value={(accountName) ? `https://res.cloudinary.com/${accountName}/image/upload` : ''}
             />
@@ -394,7 +307,7 @@ function App() {
               >
             <TextField
               id="outlined-basic"
-              label={'Configurations'}
+              label={'Konfigurasjoner'}
               variant="outlined"
               value={(transformations) ? transformations : ''}
             />
@@ -409,7 +322,7 @@ function App() {
               >
             <TextField
               id="outlined-basic"
-              label={'Image ID'}
+              label={'Filnavn'}
               variant="outlined"
               value={(imageId) ? imageId : ''}
             />
