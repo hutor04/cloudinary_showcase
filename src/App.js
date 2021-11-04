@@ -165,7 +165,7 @@ function App() {
     <Container maxWidth={'false'}>
       <Grid container spacing={2} direction={'row'}>
         <Grid item>
-          <Box maxWidth="sm" marginTop={'47px'}>
+          <Box maxWidth="sm" marginTop={'50px'}>
             <TabContext value={valueTab}>
               <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                 <TabList onChange={handleTabClick} aria-label="lab API tabs example">
@@ -230,9 +230,9 @@ function App() {
         <Grid item  xs={6} md={8}>
           <Box sx={{mt: 4}}>
             <Typography component="h2" variant={'h4'} gutterBottom>
-              Image
+              Bilde
             </Typography>
-            <Divider sx={{mb: 2}}>Original URL</Divider>
+            <Divider sx={{mb: 2, mt: 3}}></Divider>
           </Box>
           <Box
             component="form"
@@ -262,9 +262,7 @@ function App() {
             container
             sx={{minWidth: 1400, minHeight: 800, direction: 'row', alignItems: 'center', justifyContent: 'center'}}
           >
-            <Grid item>
               {processedImage}
-            </Grid>
           </Grid>
           <Box
             component="form"
