@@ -37,7 +37,7 @@ function App() {
     text: 'none',
     watermark: 'none',
   })
-  const [inputImage, setInputImage] = useState('https://res.cloudinary.com/dipmnmohl/image/upload/v1619610667/woman_zaij6u.jpg')
+  const [inputImage, setInputImage] = useState('https://res.cloudinary.com/demo/image/upload/woman.jpg')
 
   const [valueTab, setValueTab] = React.useState('1')
 
